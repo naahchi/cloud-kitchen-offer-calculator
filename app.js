@@ -118,23 +118,23 @@
   });
 
   // PWA install button: shown only when the browser supports install prompting.
-  // let deferredInstallPrompt = null;
-  // const installBtn = $('installBtn');
-  // window.addEventListener('beforeinstallprompt', (event) => {
-  //   event.preventDefault();
-  //   deferredInstallPrompt = event;
-  //   installBtn.hidden = false;
-  // });
-  // installBtn.addEventListener('click', async () => {
-  //   if (!deferredInstallPrompt) return;
-  //   deferredInstallPrompt.prompt();
-  //   await deferredInstallPrompt.userChoice;
-  //   deferredInstallPrompt = null;
-  //   installBtn.hidden = true;
-  // });
-  // window.addEventListener('appinstalled', () => {
-  //   installBtn.hidden = true;
-  // });
+  let deferredInstallPrompt = null;
+  const installBtn = $('installBtn');
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    installBtn.hidden = false;
+  });
+  installBtn.addEventListener('click', async () => {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installBtn.hidden = true;
+  });
+  window.addEventListener('appinstalled', () => {
+    installBtn.hidden = true;
+  });
 
   function updateOnlineStatus() {
     $('offlineBanner').hidden = navigator.onLine;
