@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14251f">
+  <meta name="description" content="क्लाउड किचन के ऑफर, कूपन और प्रति ऑर्डर मुनाफे का आसान कैलकुलेटर।">
+  <meta name="application-name" content="Cloud Kitchen Calculator">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kitchen Calc">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>Cloud Kitchen Offer Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">₹</div>
+    <div class="brand-copy">
+      <p class="eyebrow">CLOUD KITCHEN TOOLKIT</p>
+      <h1>Offer & Profit Calculator</h1>
+      <p class="subtitle">ऑफर लगाएँ, खर्च जोड़ें और देखें कि प्रति ऑर्डर कितना बच सकता है।</p>
+    </div>
+    <!-- <button type="button" class="install-button" id="installBtn" hidden><span aria-hidden="true">＋</span> ऐप इंस्टॉल करें</button> -->
+  </header>
+
+  <main class="page">
+    <div class="offline-banner" id="offlineBanner" hidden><span aria-hidden="true">●</span> आप ऑफलाइन हैं — कैलकुलेटर उपलब्ध है।</div>
+    <section class="intro card">
+      <div>
+        <span class="pill">सरल हिसाब • मोबाइल फ्रेंडली • PWA</span>
+        <h2>पहले ये 3 बातें समझें</h2>
+        <ul class="intro-list">
+          <li><strong>Menu price:</strong> ग्राहक के ऑर्डर की छूट से पहले वाली आइटम वैल्यू।</li>
+          <li><strong>Restaurant-funded coupon:</strong> छूट आपकी कमाई से घटेगी।</li>
+          <li><strong>Platform-funded coupon:</strong> केवल तभी चुनें जब आपके settlement में प्लेटफॉर्म सच में पूरी छूट अलग से दे रहा हो।</li>
+        </ul>
+      </div>
+      <div class="warning-note"><strong>ध्यान दें:</strong> यह अनुमान लगाने का टूल है, अकाउंटिंग/टैक्स सलाह नहीं। असली payout आपकी पार्टनर फीस, GST, settlement और promotion की शर्तों पर निर्भर करेगा।</div>
+    </section>
+
+    <div class="layout">
+      <section class="card calculator">
+        <div class="section-heading">
+          <div><p class="eyebrow">STEP 1</p><h2>ऑर्डर और ऑफर</h2></div>
+          <button type="button" class="text-button" id="resetBtn">रीसेट करें</button>
+        </div>
+        <div class="field">
+          <label for="menuPrice">मेन्यू ऑर्डर वैल्यू (₹)</label>
+          <div class="input-wrap"><span>₹</span><input id="menuPrice" type="number" min="0" step="1" value="199" inputmode="decimal"></div>
+          <small>कूपन लगाने से पहले की आइटम वैल्यू डालें।</small>
+        </div>
+        <div class="field">
+          <label for="couponType">ऑफर का प्रकार</label>
+          <select id="couponType">
+            <option value="flat">Flat ₹ discount (सीधी छूट)</option>
+            <option value="percent">Percentage discount (%)</option>
+            <option value="none">कोई कूपन नहीं</option>
+          </select>
+        </div>
+        <div class="field" id="couponValueField">
+          <label for="couponValue" id="couponValueLabel">कूपन की रकम (₹)</label>
+          <div class="input-wrap"><span id="couponPrefix">₹</span><input id="couponValue" type="number" min="0" step="1" value="80" inputmode="decimal"></div>
+        </div>
+        <div class="field">
+          <label for="minOrder">कूपन की न्यूनतम ऑर्डर वैल्यू (₹)</label>
+          <div class="input-wrap"><span>₹</span><input id="minOrder" type="number" min="0" step="1" value="149" inputmode="decimal"></div>
+          <small>अगर कोई minimum order condition नहीं है, तो 0 डालें।</small>
+        </div>
+        <div class="field">
+          <label>डिस्काउंट कौन दे रहा है?</label>
+          <div class="choice-list">
+            <label class="choice"><input type="radio" name="funding" value="restaurant" checked><span><strong>रेस्टोरेंट</strong><small>कूपन की रकम आपकी कमाई से घटेगी।</small></span></label>
+            <label class="choice"><input type="radio" name="funding" value="platform"><span><strong>प्लेटफॉर्म</strong><small>तभी चुनें जब पूरी छूट आपके payout से नहीं कटती।</small></span></label>
+            <label class="choice"><input type="radio" name="funding" value="shared"><span><strong>दोनों मिलकर</strong><small>नीचे अपनी तरफ का हिस्सा डालें।</small></span></label>
+          </div>
+        </div>
+        <div class="field hidden" id="restaurantShareField">
+          <label for="restaurantShare">रेस्टोरेंट की छूट में हिस्सेदारी (%)</label>
+          <div class="input-wrap"><input id="restaurantShare" type="number" min="0" max="100" step="1" value="50" inputmode="decimal"><span>%</span></div>
+        </div>
+        <div class="divider"></div>
+        <div class="section-heading"><div><p class="eyebrow">STEP 2</p><h2>खर्च जोड़ें</h2></div></div>
+        <div class="field-grid">
+          <div class="field"><label for="foodCost">खाने की लागत (₹)</label><input id="foodCost" type="number" min="0" step="0.5" value="30" inputmode="decimal"></div>
+          <div class="field"><label for="packCost">पैकेजिंग (₹)</label><input id="packCost" type="number" min="0" step="0.5" value="8" inputmode="decimal"></div>
+          <div class="field"><label for="kitchenCost">गैस/श्रम/अन्य किचन खर्च (₹)</label><input id="kitchenCost" type="number" min="0" step="0.5" value="7" inputmode="decimal"></div>
+          <div class="field"><label for="platformFee">प्लेटफॉर्म फीस (₹)</label><input id="platformFee" type="number" min="0" step="0.5" value="25" inputmode="decimal"></div>
+          <div class="field"><label for="otherCost">अन्य खर्च (₹)</label><input id="otherCost" type="number" min="0" step="0.5" value="0" inputmode="decimal"></div>
+          <div class="field"><label for="taxReserve">टैक्स/फीस का अतिरिक्त अनुमान (₹)</label><input id="taxReserve" type="number" min="0" step="0.5" value="0" inputmode="decimal"></div>
+        </div>
+        <p class="hint">प्लेटफॉर्म फीस में वही रकम डालें जो आप अपने हिसाब में खर्च मानना चाहते हैं। अगर फीस पर GST या अन्य कटौती अलग है, तो उसे टैक्स/फीस के अतिरिक्त अनुमान में शामिल कर सकते हैं। डबल-काउंट न करें।</p>
+        <button type="button" class="primary-button" id="calculateBtn">मेरा हिसाब दिखाएँ</button>
+      </section>
+
+      <aside class="results-column">
+        <section class="card result-card" aria-live="polite">
+          <p class="eyebrow">आपका अनुमान</p><h2>प्रति ऑर्डर हिसाब</h2>
+          <div class="profit-panel" id="profitPanel">
+            <span id="profitCaption">अनुमानित योगदान</span><strong id="profitValue">₹129.00</strong>
+            <small id="profitSub">यह सभी दर्ज खर्च और रेस्टोरेंट की छूट घटाने के बाद है।</small>
+          </div>
+          <div class="result-lines">
+            <div><span>मूल ऑर्डर वैल्यू</span><strong id="rMenu">₹199.00</strong></div>
+            <div><span>कूपन की कुल रकम</span><strong id="rCoupon">−₹80.00</strong></div>
+            <div><span>रेस्टोरेंट की छूट</span><strong id="rRestaurantDiscount">−₹80.00</strong></div>
+            <div><span>छूट के बाद बिक्री (सरल अनुमान)</span><strong id="rNetSales">₹119.00</strong></div>
+            <div><span>कुल दर्ज खर्च</span><strong id="rCosts">₹70.00</strong></div>
+            <div><span>ऑर्डर पर योगदान मार्जिन</span><strong id="rMargin">41.2%</strong></div>
+          </div>
+          <div id="statusMessage" class="status-message positive">इस अनुमान में खर्च निकालने के बाद रकम बच रही है।</div>
+        </section>
+        <section class="card quick-card">
+          <div class="section-heading"><div><p class="eyebrow">QUICK PRESETS</p><h2>झटपट ऑफर चुनें</h2></div></div>
+          <div class="preset-grid">
+            <button class="preset" data-price="149" data-discount="80" data-min="149"><strong>₹149 पर ₹80 OFF</strong><small>आपके बताए स्लैब में से</small></button>
+            <button class="preset" data-price="199" data-discount="120" data-min="199"><strong>₹199 पर ₹120 OFF</strong><small>ज्यादा छूट वाला स्लैब</small></button>
+            <button class="preset" data-price="299" data-discount="140" data-min="299"><strong>₹299 पर ₹140 OFF</strong><small>बड़े ऑर्डर के लिए</small></button>
+            <button class="preset" data-price="349" data-discount="150" data-min="349"><strong>₹349 पर ₹150 OFF</strong><small>बड़ा बिल, बड़ी छूट</small></button>
+            <button class="preset" data-price="449" data-discount="180" data-min="449"><strong>₹449 पर ₹180 OFF</strong><small>फैमिली/ग्रुप ऑर्डर</small></button>
+          </div>
+          <p class="hint">Preset चुनने पर मेन्यू वैल्यू, छूट और minimum order अपने आप भरेंगे। खर्च अपनी वास्तविक लागत के अनुसार बदलें।</p>
+        </section>
+        <section class="card formula-card">
+          <h2>हिसाब कैसे होता है?</h2>
+          <p><strong>अनुमानित योगदान =</strong> ऑर्डर वैल्यू − रेस्टोरेंट की छूट − खाने की लागत − पैकेजिंग − किचन खर्च − प्लेटफॉर्म फीस − अन्य खर्च।</p>
+          <p>“योगदान” का मतलब दर्ज खर्चों के बाद बची रकम है। किराया, उपकरण, लाइसेंस जैसे fixed खर्च शामिल नहीं हैं जब तक उन्हें दर्ज न किया जाए।</p>
+        </section>
+      </aside>
+    </div>
+
+    <section class="card strategy">
+      <p class="eyebrow">OFFER PLAYBOOK</p><h2>ऑफर टेक्निक्स की छोटी लिस्ट</h2>
+      <div class="strategy-grid">
+        <article><h3>1. Flat Discount</h3><p>जैसे ₹149 के ऑर्डर पर ₹40 OFF।</p></article>
+        <article><h3>2. Tiered Discount</h3><p>अलग-अलग ऑर्डर स्लैब पर अलग छूट।</p></article>
+        <article><h3>3. Combo Pricing</h3><p>मुख्य आइटम + साइड डिश को पैकेज में बेचना।</p></article>
+        <article><h3>4. Buy More, Save More</h3><p>ज्यादा मात्रा पर बेहतर प्रति-आइटम कीमत।</p></article>
+        <article><h3>5. Entry Product</h3><p>कम पोर्शन वाला बजट आइटम नए ग्राहक के लिए।</p></article>
+        <article><h3>6. Add-on Selling</h3><p>अतिरिक्त दाल, चूरमा, छाछ जैसे ऐड-ऑन।</p></article>
+        <article><h3>7. Free Gift</h3><p>छोटा, कम लागत वाला अतिरिक्त आइटम।</p></article>
+        <article><h3>8. First Order Coupon</h3><p>नए ग्राहक को पहली खरीद पर सीमित छूट।</p></article>
+        <article><h3>9. Repeat Coupon</h3><p>अगले ऑर्डर के लिए कूपन देकर वापसी बढ़ाना।</p></article>
+        <article><h3>10. Limited-Time Offer</h3><p>सीमित समय के लिए ऑफर।</p></article>
+        <article><h3>11. Family Pack</h3><p>दो या चार लोगों के लिए बड़ा कॉम्बो।</p></article>
+        <article><h3>12. Loss Leader</h3><p>एक आइटम कम मार्जिन पर बेचकर कुल ऑर्डर बढ़ाना—केवल तभी जब कुल योगदान ठीक हो।</p></article>
+      </div>
+    </section>
+    <footer>
+      <p>Cloud Kitchen Offer Calculator • PWA • HTML, CSS और JavaScript</p>
+      <p>यह ऐप install होने के बाद कैलकुलेटर को ऑफलाइन भी चला सकता है। गणना आपके डिवाइस पर होती है; डेटा सर्वर पर नहीं भेजा जाता।</p>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
